@@ -147,3 +147,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# tell Django where all of static files are located
+# this STATICFILES_DIRS is supposed to be a tuple
+STATICFILES_DIR = (os.path.join(BASE_DIR, 'static'),)
+
+# add a MEDIA_URL and a MEDIA_ROUTE which is where all uploaded media files will go
+MEDIA_URL = '/media/'
+MEDIA_ROUTE = os.path.join(BASE_DIR, 'media')
