@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'django-insecure-*zc!+9#1g(v!%0(l#(#7tp)(60#s_b-ii-skf5$njhk!io#tis'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['8000-ireneuszcie-boutiqueado-0klw69r04ch.ws-eu110.gitpod.io']
 
@@ -150,8 +150,8 @@ STATIC_URL = '/static/'
 
 # tell Django where all of static files are located
 # this STATICFILES_DIRS is supposed to be a tuple
-STATICFILES_DIR = (os.path.join(BASE_DIR, 'static'),)
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
 # add a MEDIA_URL and a MEDIA_ROUTE which is where all uploaded media files will go
 MEDIA_URL = '/media/'
-MEDIA_ROUTE = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
