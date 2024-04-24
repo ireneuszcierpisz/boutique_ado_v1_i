@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'django-insecure-*zc!+9#1g(v!%0(l#(#7tp)(60#s_b-ii-skf5$njhk!io#tis'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['8000-ireneuszcie-boutiqueado-0klw69r04ch.ws-eu110.gitpod.io']
 
