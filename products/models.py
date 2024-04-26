@@ -2,6 +2,12 @@ from django.db import models
 
 # create category model which will give our products a category like clothing, kitchen and dining, or deals
 class Category(models.Model):
+
+    # adjust the verbose name or the plural form of it from the Django defaults
+    # as django just adding an s to the model name in the admin panel
+    class Meta:
+        verbose_name_plural = 'Categories'
+
     name = models.CharField(max_length=254)
     # null equals true and blank equals true so that the friendly name is optional
     friendly_name = models.CharField(max_length=254, null=True, blank=True)
