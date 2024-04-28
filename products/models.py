@@ -1,6 +1,6 @@
 from django.db import models
 
-# create category model which will give our products a category like clothing, kitchen and dining, or deals
+# create category model which will give products a category like clothing, kitchen and dining, or deals
 class Category(models.Model):
 
     # adjust the verbose name or the plural form of it from the Django defaults
