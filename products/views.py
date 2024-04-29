@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .models import Product
 
 # Create your views here.
@@ -15,3 +15,17 @@ def all_products(request):
     }
 
     return render(request, 'products/products.html', context)
+
+# the view which take an individual product_id as a parameter and returns the template including the product
+def product_detail(request, product_id):
+    """ A view to show individual product details """
+
+    # return only one product from the database
+    product = get_object_or_404(Product, pk=product_id)
+
+    # add product to the context so 'product' will be available in the template
+    context = {
+        'product': product,
+    }
+
+    return render(request, 'products/product_detail.html', context)
