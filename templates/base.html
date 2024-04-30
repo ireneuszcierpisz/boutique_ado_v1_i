@@ -53,8 +53,11 @@
               </a>
           </div>
           <div class="col-12 col-lg-4 my-auto py-1 py-lg-0">
-              <form method="GET" action="">
+            <!-- as we have the 'products' url so we set the action url to 'products'
+            which will submit this form to the all_products view. -->
+              <form method="GET" action="{% url 'products' %}">
                   <div class="input-group w-100">
+                        <!-- we name a text input 'q' so it'll be checked in a search query process -->
                       <input class="form-control border border-black rounded-0" type="text" name="q" placeholder="Search our site">
                       <div class="input-group-append">
                           <button class="form-control btn btn-black border border-black rounded-0" type="submit">
