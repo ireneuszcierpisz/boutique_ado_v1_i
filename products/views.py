@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.contrib import messages
-# a special object from Jango.db.models called Q to generate a search query:
+# a special object from Jango.db.models called Q to generate a more complex search query:
 from django.db.models import Q
 from .models import Product
 
@@ -10,6 +10,8 @@ def all_products(request):
 
     # return all products from the database
     products = Product.objects.all()
+
+    # ensure we don't get an error when loading the products page without a search term
     query = None
 
     # when a search query is submited it end up in the url as a GET parameter.
@@ -24,12 +26,17 @@ def all_products(request):
                 messages.error(request, "You didn't enter any search criteria")
                 # and redirect back to the products url
                 return redirect(reverse('products'))
+            # construct queries:
+            # set a variable named queries equal to a Q object,where the name contains the query or the description contains the query
+            # case-insensitive containment test uses icontains statement
             queries = Q(name__icontains=query) | Q(description__icontains=query)
+            # pass queries to the filter method in order to actually filter the products
             products = products.filter(queries)
 
     # add all products to the context so products will be available in the template
     context = {
         'products': products,
+        # add the query to the context
         'search_term': query,
     }
 
