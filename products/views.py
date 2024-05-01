@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.contrib import messages
 # a special object from Jango.db.models called Q to generate a more complex search query:
 from django.db.models import Q
-from .models import Product
+from .models import Product, Category
 
 # define an all_products view which will render the products template
 def all_products(request):
@@ -14,9 +14,23 @@ def all_products(request):
     # ensure we don't get an error when loading the products page without a search term
     query = None
 
+    # to capture a category parameter we'll start with it as none
+    categories = None
+
     # when a search query is submited it end up in the url as a GET parameter.
     # We can access those url parameter in the all_products view by checking whether request.get exists:
     if request.GET:
+        # check whether category exists in requests.GET
+        if 'category' in request.GET:
+            # split category into a list
+            categories = request.GET['category'].split(',')
+            # filter the current query set of all products down to only products whose category name is in the list
+            # look for the name field of the related category model using the double underscore syntax
+            products = products.filter(category__name__in=categories)
+            # filter all category objects down to the ones whose name is in the list from the URL
+            # and get a list of actual category objects (so that we can access all their fields in the template)
+            categories = Category.objects.filter(name__in=categories)
+
         # Since we named the text input in the form in base.html 'q', we can check if 'q' is in request.GET
         if 'q' in request.GET:
             query = request.GET['q']
@@ -38,6 +52,8 @@ def all_products(request):
         'products': products,
         # add the query to the context
         'search_term': query,
+        # return the list of category objects to the context as a current_category
+        'current_categories': categories,
     }
 
     return render(request, 'products/products.html', context)
