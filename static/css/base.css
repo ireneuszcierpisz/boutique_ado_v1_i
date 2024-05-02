@@ -72,6 +72,14 @@ and a z-index of negative 1 to make sure that it sits behind all the content. */
     z-index: -1;
 }
 
+/*This background colour matches the bootstrap dark class so this
+will make the badges look similar to a bootstrap button with the dark class on them*/
+a.category-badge > span.badge:hover {
+    background: #212529 !important;
+    color: #fff !important;
+}
+
+
 /* -------------------------------- Media Queries */
 
 /* Slightly larger container on xl screens */
