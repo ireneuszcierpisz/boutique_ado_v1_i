@@ -17,9 +17,32 @@ def all_products(request):
     # to capture a category parameter we'll start with it as none
     categories = None
 
+    # to return the template properly when we're not using any sorting.
+    sort = None
+    direction = None
+
     # when a search query is submited it end up in the url as a GET parameter.
     # We can access those url parameter in the all_products view by checking whether request.get exists:
     if request.GET:
+        if 'sort' in request.GET:
+            sortkey = request.GET['sort']
+            sort = sortkey
+            
+            if sortkey == 'name':
+                # in order to allow case-insensitive sorting on the name field
+                # annotate all the products with a new field "lower_name"
+                sortkey = 'lower_name'
+                products = products.annotate(lower_name=Lower('name'))
+
+            if 'direction' in request.GET:
+                direction = request.GET['direction']
+                if direction == 'desc':
+                    # if the direction is descending reverse the order
+                    sortkey = f'-{sortkey}'
+            # use the order_by model method to actually sort the products 
+            products = products.order_by(sortkey)
+
+
         # check whether category exists in requests.GET
         if 'category' in request.GET:
             # split category into a list
@@ -47,13 +70,20 @@ def all_products(request):
             # pass queries to the filter method in order to actually filter the products
             products = products.filter(queries)
 
-    # add all products to the context so products will be available in the template
+    current_sorting = f'{sort}_{direction}'
+    
     context = {
+        # add all products to the context so products will be available in the template
         'products': products,
+
         # add the query to the context
         'search_term': query,
+
         # return the list of category objects to the context as a current_category
         'current_categories': categories,
+
+        # return the current sorting methodology to the template
+        'current_sorting': current_sorting,
     }
 
     return render(request, 'products/products.html', context)
