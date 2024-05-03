@@ -104,6 +104,20 @@ a.category-badge > span.badge:hover {
     }
 }
 
+/* set a static width, height and position in the bottom right of the screen */
+.btt-button {
+    height: 42px;
+    width: 42px;
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+}
+
+/* make the cursor into a pointer */
+.btt-link {
+    cursor: pointer;
+}
+
 /* pad the top a bit when navbar is collapsed on mobile */
 @media (max-width: 991px) {
     .header-container {

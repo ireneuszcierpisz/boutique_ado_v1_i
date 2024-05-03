@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.contrib import messages
 # a special object from Jango.db.models called Q to generate a more complex search query:
 from django.db.models import Q
+from django.db.models.functions import Lower
 from .models import Product, Category
 
 # define an all_products view which will render the products template
@@ -24,7 +25,7 @@ def all_products(request):
     # when a search query is submited it end up in the url as a GET parameter.
     # We can access those url parameter in the all_products view by checking whether request.get exists:
     if request.GET:
-        # sort, direction and category parameters used in main-nav template
+        # sort, direction and category parameters in the url, used in main-nav template
         if 'sort' in request.GET:
             sortkey = request.GET['sort']
             sort = sortkey
