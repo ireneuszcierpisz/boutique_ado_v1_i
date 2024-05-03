@@ -24,6 +24,7 @@ def all_products(request):
     # when a search query is submited it end up in the url as a GET parameter.
     # We can access those url parameter in the all_products view by checking whether request.get exists:
     if request.GET:
+        # sort, direction and category parameters used in main-nav template
         if 'sort' in request.GET:
             sortkey = request.GET['sort']
             sort = sortkey
@@ -33,6 +34,11 @@ def all_products(request):
                 # annotate all the products with a new field "lower_name"
                 sortkey = 'lower_name'
                 products = products.annotate(lower_name=Lower('name'))
+
+            # force categories to be sorted by name instead of their ids
+            if sortkey == 'category':
+                # double underscore syntax allows us to drill into a related model
+                sortkey = 'category__name'
 
             if 'direction' in request.GET:
                 direction = request.GET['direction']
@@ -72,6 +78,7 @@ def all_products(request):
 
     current_sorting = f'{sort}_{direction}'
     
+    # template variables to be returned from all_products view to the template:
     context = {
         # add all products to the context so products will be available in the template
         'products': products,

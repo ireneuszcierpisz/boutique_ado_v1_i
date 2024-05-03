@@ -27,6 +27,8 @@
         <div class="row">
             <div class="product-container col-10 offset-1">
                 <div class="row mt-1 mb-2">
+
+                    <!-- put the sort select box on top on mobile using the order-md-first and order-md-last classes -->
                     <div class="col-12 col-md-6 my-auto order-md-last d-flex justify-content-center justify-content-md-end">
 
                         <!-- the sort select box -->
@@ -45,15 +47,21 @@
                         </div>
 
                     </div>
+
+                    <!-- the products count and search result -->
                     <div class="col-12 col-md-6 order-md-first">
                         <p class="text-muted mt-3 text-center text-md-left">
                             {% if search_term or current_categories or current_sorting != 'None_None' %}
                                 <span class="small"><a href="{% url 'products' %}">Products Home</a> | </span>
                             {% endif %}
+                            <!-- use the length built-in template filter to count the number of products 
+                                if there's a 'search_term' returned in the context from the all_products view -->
                             {{ products|length }} Products{% if search_term %} found for <strong>"{{ search_term }}"</strong>{% endif %}
                         </p>
                     </div>
+
                 </div>
+
                 <div class="row">
                     {% for product in products %}
                         <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3">
