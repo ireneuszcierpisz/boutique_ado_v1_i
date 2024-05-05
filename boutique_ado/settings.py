@@ -73,6 +73,10 @@ TEMPLATES = [
                 'django.template.context_processors.request', # required by allauth
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                # adding our context_processor below means that anytime we need to access the bag contents 
+                # in any template across the entire site they'll be available to us
+                # without having to return them from a whole bunch of different views across different apps
+                'bag.contexts.bag_contents',
             ],
         },
     },
@@ -157,3 +161,6 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 # add a MEDIA_URL and a MEDIA_ROUTE which is where all uploaded media files will go
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+FREE_DELIVERY_THRESHOLD = 50
+STANDARD_DELIVERY_PERCENTAGE = 10
