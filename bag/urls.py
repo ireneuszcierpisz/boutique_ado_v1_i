@@ -5,4 +5,6 @@ urlpatterns = [
     # one empty path to indicate that this is the route URL.
     # It renders views.index with the name of home.
     path('', views.view_bag, name='view_bag'),
+    # the url for add_to_bag view, containing the item_id
+    path('add/<item_id>/', views.add_to_bag, name='add_to_bag'),
 ]
