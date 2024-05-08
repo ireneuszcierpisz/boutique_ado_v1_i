@@ -8,7 +8,7 @@ def view_bag(request):
     return render(request, 'bag/bag.html')
 
 
-# We'll submit the form to this view including the product id and the quantity
+# We'll submit the form product_detail.html to this view including the product id and the quantity
 def add_to_bag(request, item_id):
     """ Add a quantity of the specified product to the shopping bag """
 
@@ -24,8 +24,8 @@ def add_to_bag(request, item_id):
     # uses what's called a session, to allow information to be stored until the client and server are done communicating.
     # It allows to store the contents of the shopping bag in the HTTP session, while the user browses the site 
     # and adds items to be purchased, by storing the shopping bag in the session. It will persist until the user closes their browser.
-    # A variable bag accesses the requests session and first check if there's a 'bag' variable in the session
-    # and if not we'll create one as an empty dictionary
+    # A session variable bag accesses the requests session and first check if there's a 'bag' key in the session dictionary
+    # and if not we'll create an empty dictionary
     bag = request.session.get('bag', {})
 
     # add the item to the bag
@@ -39,8 +39,11 @@ def add_to_bag(request, item_id):
     # put the bag variable into the session which itself is a python dictionary
     request.session['bag'] = bag
 
-    # print the shopping bag from the session to the console
-    print(request.session['bag'])
+    # ! Because bag is a session variable we can access it anywhere we can access the request object
+    # like in our views or the custom context processor we made in context.py
+
+    # # print the shopping bag from the session to the console
+    # print(request.session['bag'])
 
     # redirect the user back to the redirect_url
     return redirect(redirect_url)

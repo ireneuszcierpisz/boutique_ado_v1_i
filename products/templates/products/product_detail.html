@@ -45,7 +45,7 @@
                     {% endif %}
                     <p class="mt-3">{{ product.description }}</p>
                     <!-- use the POST method to send information to the server about the product we adding to the bag -->
-                    <!-- the action URL submitting to the add_to_bag URL and includs the product id, the user is adding -->
+                    <!-- the action URL submitting to the add_to_bag URL and includs the product id the user is adding -->
                     <form class="form" action="{% url 'add_to_bag' product.id %}" method="POST">
                         <!-- Because of POST, we use the CSRF token in order to take advantage of Django's Cross-Site Request Forgery protection.
                         As a security precaution without csrf_token Django won't allow to submit the form. -->
