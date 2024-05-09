@@ -30,6 +30,8 @@ class Product(models.Model):
     # each product requires a name, a description, and a price, but everything else is optional.
     name = models.CharField(max_length=254)
     description = models.TextField()
+    # the field false by default,allowed to be blank both in the database and in forms rather than implement different sizes for every product in the database
+    has_sizes = models.BooleanField(default=False, null=True, blank=True)
     price = models.DecimalField(max_digits=6, decimal_places=2)
     rating = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
     image_url = models.URLField(max_length=1024, null=True, blank=True)
