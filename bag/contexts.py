@@ -27,21 +27,38 @@ def bag_contents(request):
     bag = request.session.get("bag", {})
 
     # add the products and their data to the bag items list
-    for item_id, quantity in bag.items():
-        # get the product
-        product = get_object_or_404(Product, pk=item_id)
-        # add product quantity times the price to the total
-        total += quantity * product.price
-        # increment the product count by the quantity
-        product_count += quantity
-        # add to the list of bag items a dictionary also containing the product object itself
-        # that will give us access to all the other product fields such as the product image 
-        # when iterating through the bag items in our templates
-        bag_items.append({
-            'item_id': item_id,
-            'quantity': quantity,
-            'product': product,
-        })
+    for item_id, item_data in bag.items():
+        # we only want to execute the code below if the item has no sizes means the item_data is an integer.
+        # If it's an integer then we know the item_data is just the quantity.
+        if isinstance(item_data, int):
+            # get the product
+            product = get_object_or_404(Product, pk=item_id)
+            # add product quantity times the price to the total
+            total += item_data * product.price
+            # increment the product count by the quantity
+            product_count += item_data
+            # add to the list of bag items a dictionary also containing the product object itself
+            # that will give us access to all the other product fields such as the product image 
+            # when iterating through the bag items in our templates
+            bag_items.append({
+                'item_id': item_id,
+                'quantity': item_data,
+                'product': product,
+            })
+        else:
+            product = get_object_or_404(Product, pk=item_id)
+            # Otherwise we know item_data is a dictionary and we need to 
+            # iterate through the inner dictionary of items_by_size
+            for size, quantity in item_data['items_by_size'].items():
+                total += quantity * product.price
+                product_count += quantity
+                bag_items.append({
+                    'item_id': item_id,
+                    'quantity': item_data,
+                    'product': product,
+                    # This is how we'll be able to render the sizes in the template
+                    'size': size,
+                })
 
     if total < settings.FREE_DELIVERY_THRESHOLD:
         delivery = total * Decimal(settings.STANDARD_DELIVERY_PERCENTAGE / 100)

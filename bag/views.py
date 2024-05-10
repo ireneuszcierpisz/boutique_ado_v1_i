@@ -19,6 +19,13 @@ def add_to_bag(request, item_id):
     # get the redirect URL from the form, so we know where to redirect once the process here is finished
     redirect_url = request.POST.get('redirect_url')
 
+    # initial value of a product size
+    size = None
+    # if 'product_size' name of selector from product_detail template form
+    if 'product_size' in request.POST:
+        size = request.POST['product_size']
+
+
     # HTTP every request-response cycle between the server and the client, 
     # in our case between the django view on the server-side and our form making the request on the client-side,
     # uses what's called a session, to allow information to be stored until the client and server are done communicating.
@@ -28,13 +35,25 @@ def add_to_bag(request, item_id):
     # and if not we'll create an empty dictionary
     bag = request.session.get('bag', {})
 
-    # add the item to the bag
-    # if there's already a key in the bag dictionary matching product id, increment its quantity
-    if item_id in list(bag.keys()):
-        bag[item_id] += quantity
+    # check if a product with sizes is being added to the bag
+    if size:
+        if item_id in list(bag.keys()):
+            if size in bag[item_id]['items_by_size'].keys():
+                bag[item_id]['items_by_size'][size] += quantity
+            else:
+                bag[item_id]['items_by_size'][size] = quantity
+        # If the item's not already in the bag we need to add it as a dictionary with a key of 'items_by_size'
+        # since we may have multiple items with this item_id but different sizes.        
+        else:
+            bag[item_id] = {'items_by_size': {size: quantity}}
     else:
-        # create a key of the items id and set it equal to the quantity
-        bag[item_id] = quantity
+        # add the item to the bag
+        # if there's already a key in the bag dictionary matching product id, increment its quantity
+        if item_id in list(bag.keys()):
+            bag[item_id] += quantity
+        else:
+            # create a key of the items id and set it equal to the quantity
+            bag[item_id] = quantity
 
     # put the bag variable into the session which itself is a python dictionary
     request.session['bag'] = bag
