@@ -54,7 +54,8 @@ def bag_contents(request):
                 product_count += quantity
                 bag_items.append({
                     'item_id': item_id,
-                    'quantity': item_data,
+                    # the quantity from the inner for loop
+                    'quantity': quantity,
                     'product': product,
                     # This is how we'll be able to render the sizes in the template
                     'size': size,

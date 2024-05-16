@@ -58,8 +58,54 @@
                                     <td class="py-3">
                                         <p class="my-0">${{ item.product.price }}</p>
                                     </td>
+                                    <!-- add the quantity selector box to the shopping bag quantity column
+                                    allowing users to update the quantity right from the shopping bag. -->
                                     <td class="py-3 w-25">
-                                        <p class="my-0">{{ item.quantity }}</p>
+                                        <!-- replace this quantity in the table with a form with a method of post: -->
+                                        <!-- <p class="my-0">{{ item.quantity }}</p> -->
+                                        <form class="form update-form" method="POST" action="">
+                                            {% csrf_token %}
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <!-- there is no product.id template variable here instead it is item.item_id -->
+                                                        <button class="decrement-qty btn btn-sm btn-black rounded-0"
+                                                            data-item_id="{{ item.item_id }}" id="decrement-qty_{{ item.item_id }}">
+                                                            <span>
+                                                                <i class="fas fa-minus fa-sm"></i>
+                                                            </span>
+                                                        </button>
+                                                    </div>
+                                                    <!-- the value of the input box {{ item.quantity }} reflects
+                                                    the number of this item currently in the shopping bag -->
+                                                    <input class="form-control form-control-sm qty_input" type="number"
+                                                        name="quantity" value="{{ item.quantity }}" min="1" max="99"
+                                                        data-item_id="{{ item.item_id }}"
+                                                        id="id_qty_{{ item.item_id }}">
+                                                    <div class="input-group-append">
+                                                        <button class="increment-qty btn btn-sm btn-black rounded-0"
+                                                            data-item_id="{{ item.item_id }}" id="increment-qty_{{ item.item_id }}">
+                                                            <span>
+                                                                <i class="fas fa-plus fa-sm"></i>
+                                                            </span>
+                                                        </button>
+                                                    </div>
+                                                    <!-- there's no size selector box on this page so we need to submit 
+                                                        the size of the item, the user wants to update or remove,
+                                                         in a hidden input field, if the product does have sizes -->
+                                                    {% if item.product.has_sizes %}
+                                                        <input type="hidden" name="product_size" value="{{ item.size }}">
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <!-- Rather than add a submit button, to keep the visual impact minimal use a link 
+                                        and handle its click event with JavaScript at the bottom of the document. 
+                                        Create two anchor elements. One for updating the quantity which will submit the form.
+                                        And second for removing the item from the bag entirely. -->
+                                        <a class="update-link text-info"><small>Update</small></a>
+                                        <!-- The data-* attribute is used to store custom data private to the page or application. -->
+                                        <a class="remove-item text-danger float-right" id="remove_{{ item.item_id }}" data-size="{{ item.size }}"><small>Remove</small></a>
                                     </td>
                                     <td class="py-3">
                                         <p class="my-0">${{ item.product.price }}</p>
@@ -109,4 +155,51 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+<!-- include the script in order to make the form buttons work -->
+{% block postloadjs %}
+{{ block.super }}
+{% include 'products/includes/quantity_input_script.html' %}
+
+<!-- JavaScript code to be executed when any of the two <a> elements in the table above are clicked-->
+<!-- !!we need to add the additional views in the bag app to handle these events -->
+<script type="text/javascript">
+    // Update quantity on click on the update link;
+    // find the most recently seen update form in the Dom,  and then call the form's submit method
+    $('.update-link').click(function(e) {
+        // store the form in a variable; find the very previous sibling element that has a class update-form
+        var form = $(this).prev('.update-form');
+        // trigger the submit event for the form element
+        form.submit();
+    })
+
+    // Remove item and reload on click;
+    // post some data to a URL and once the response comes back from the server reload the page to reflect the updated bag
+    $('.remove-item').click(function(e) {
+        // the CSRF token we can store as a string by rendering it here, 
+        // use the template variable with the double curly brackets opposed to the template tag which uses the inner percent signs
+        // because the former renders the actual token while the latter renders a hidden input field in a form
+        var csrfToken = "{{ csrf_token }}";
+        // get itemId by splitting the id "remove_{{ item.item_id }}" of the link being clicked on and taking the second half of it
+        // use the entire first part of the string here remove_ to be very explicit about what we're splitting.
+        var itemId = $(this).attr('id').split('remove_')[1];
+        // stored in the data-size attribute (custom) data can be used in the page's JavaScript
+        // get the size using the data method to pull it from the data-size attribute of the <a> element
+        var size = $(this).data('size');
+        // declare the url which is the template literal
+        var url = `/bag/remove/${itemId}`;
+        // the data variable is the object we'll use to send this data to the server.
+        // it contain a special key called 'csrfmiddlewaretoken' which will have csrfToken variable as its value and it'll contain the size.
+        // the 'csrfmiddlewaretoken' key will match the field Django is expecting to see in request.post when we post it to the server.
+        var data = {'csrfmiddlewaretoken': csrfToken, 'size': size};
+
+        // to post to the server use the post method from jQuery giving it both the url and the data.
+        $.post(url, data)
+         // when done execute a function to reload the page
+         .done(function() {
+             location.reload();
+         });
+    })
+</script>
 {% endblock %}
