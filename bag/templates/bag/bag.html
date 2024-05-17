@@ -61,9 +61,10 @@
                                     <!-- add the quantity selector box to the shopping bag quantity column
                                     allowing users to update the quantity right from the shopping bag. -->
                                     <td class="py-3 w-25">
-                                        <!-- replace this quantity in the table with a form with a method of post: -->
-                                        <!-- <p class="my-0">{{ item.quantity }}</p> -->
-                                        <form class="form update-form" method="POST" action="">
+                                        <!-- replace this quantity in the table with a form with a method of POST: -->
+                                        <!-- <p class="my-0">{{ item.quantity }}</p>  replace this element by the form-->
+                                        <!-- Submit the item_id to the adjust_bag view submitting the form via the JavaScript at the bottom of this template as there is no submit button here-->
+                                        <form class="form update-form" method="POST" action="{% url 'adjust_bag' item.item_id %}">
                                             {% csrf_token %}
                                             <div class="form-group">
                                                 <div class="input-group">
@@ -105,7 +106,7 @@
                                         And second for removing the item from the bag entirely. -->
                                         <a class="update-link text-info"><small>Update</small></a>
                                         <!-- The data-* attribute is used to store custom data private to the page or application. -->
-                                        <a class="remove-item text-danger float-right" id="remove_{{ item.item_id }}" data-size="{{ item.size }}"><small>Remove</small></a>
+                                        <a class="remove-item text-danger float-right" id="remove_{{ item.item_id }}" data-product_size="{{ item.size }}"><small>Remove</small></a>
                                     </td>
                                     <td class="py-3">
                                         <p class="my-0">${{ item.product.price }}</p>
@@ -186,15 +187,16 @@
         var itemId = $(this).attr('id').split('remove_')[1];
         // stored in the data-size attribute (custom) data can be used in the page's JavaScript
         // get the size using the data method to pull it from the data-size attribute of the <a> element
-        var size = $(this).data('size');
-        // declare the url which is the template literal
-        var url = `/bag/remove/${itemId}`;
+        var size = $(this).data('product_size');
+        // declare the url which is the template literal as in urls.py we have path('remove/<item_id>/', views.remove_from_bag, name='remove_from_bag')
+        var url = `/bag/remove/${itemId}/`;
         // the data variable is the object we'll use to send this data to the server.
         // it contain a special key called 'csrfmiddlewaretoken' which will have csrfToken variable as its value and it'll contain the size.
         // the 'csrfmiddlewaretoken' key will match the field Django is expecting to see in request.post when we post it to the server.
-        var data = {'csrfmiddlewaretoken': csrfToken, 'size': size};
+        var data = {'csrfmiddlewaretoken': csrfToken, 'product_size': size};
 
         // to post to the server use the post method from jQuery giving it both the url and the data.
+        // the post function will work here if we will replace the slim version of jQuery with the min version
         $.post(url, data)
          // when done execute a function to reload the page
          .done(function() {
