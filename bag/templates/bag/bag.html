@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
 
+<!-- to use the custom template filter 'calc_subtotal' load bag_tools.py in the bag template -->
+{% load bag_tools %}
+
 {% block page_header %}
     <div class="container header-container">
         <div class="row">
@@ -62,7 +65,7 @@
                                     allowing users to update the quantity right from the shopping bag. -->
                                     <td class="py-3 w-25">
                                         <!-- replace this quantity in the table with a form with a method of POST: -->
-                                        <!-- <p class="my-0">{{ item.quantity }}</p>  replace this element by the form-->
+                                        <!-- <p class="my-0">{{ item.quantity }}</p>  replace this element by the form below-->
                                         <!-- Submit the item_id to the adjust_bag view submitting the form via the JavaScript at the bottom of this template as there is no submit button here-->
                                         <form class="form update-form" method="POST" action="{% url 'adjust_bag' item.item_id %}">
                                             {% csrf_token %}
@@ -109,7 +112,8 @@
                                         <a class="remove-item text-danger float-right" id="remove_{{ item.item_id }}" data-product_size="{{ item.size }}"><small>Remove</small></a>
                                     </td>
                                     <td class="py-3">
-                                        <p class="my-0">${{ item.product.price }}</p>
+                                        <!-- pipe the price as the first argument and send the item quantity as the second -->
+                                        <p class="my-0">${{ item.product.price | calc_subtotal:item.quantity }}</p>
                                     </td>
                                 </tr>
                             {% endfor %}
