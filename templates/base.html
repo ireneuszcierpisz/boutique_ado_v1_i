@@ -131,7 +131,30 @@
   </header>
     
     {% if messages %}
-        <div class="message-container"></div>
+        <div class="message-container">
+            <!-- because of the includes/toasts, we can render a different kind of notification for a different type of message. -->
+            <!-- iterate through any messages sent back from the server and render one of toasts includes -->
+            {% for message in messages %}
+                <!-- Djanggo messages have levels which are classifiers like debug, info, error and so on for different message types
+                and they can be represented with an integer as well.
+                So we can choose which of our includes/toasts/toast_ we want to render based on the message level. -->
+
+                {% with message.level as level %}
+                    {% if level == 40 %}
+                        <!-- In Django, a message of level 40 is an error. -->
+                        {% include 'includes/toasts/toast_error.html' %}
+                    {% elif level == 30 %}
+                        <!-- Level 30 is a warning -->
+                        {% include 'includes/toasts/toast_warning.html' %}
+                    {% elif level == 25 %}
+                        {% include 'includes/toasts/toast_success.html' %}
+                    {% else %}
+                        {% include 'includes/toasts/toast_info.html' %}
+                    {% endif %}
+                {% endwith %}
+
+            {% endfor %}
+        </div>
     {% endif %}
 
     {% block page_header %}
@@ -141,6 +164,14 @@
     {% endblock %}
 
     {% block postloadjs %}
+    <!-- Use the bootstrap JavaScript to show the toast and thus the message; 
+    Putting this in the base.html template will ensure that every page that loads
+    will immediately call the show option on all toasts that have been rendered in the messages container-->
+     <script type="text/JavaScript">
+        // call the toast method from bootstrap with an option of show on any elements with the toast class:
+        $('.toast').toast('show');
+     </script>
+
     {% endblock %}
 
   </body>

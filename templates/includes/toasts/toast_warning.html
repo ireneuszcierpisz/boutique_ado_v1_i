@@ -1,0 +1,22 @@
+<!-- 
+Add a feature of bootstrap called toasts which will give us notifications we can customize
+and we'll use the Django messages framework to communicate with users as they use our store.
+Toasts will pop up when a user performs an action such as adding something to their shopping bag.
+ -->
+<!-- toast from bootstrap with custom custom-toast class -->
+<div class="toast custom-toast rounded-0 border-top-0" data-autohide="false">
+    <!-- custom div -->
+    <div class="arrow-up arrow-warning"></div>
+    <!-- custom div -->
+    <div class="w-100 toast-capper bg-warning"></div>
+    <div class="toast-header bg-white text-dark">
+        <strong class="mr-auto">Warning!</strong>
+        <button type="button" class="ml-2 mb-1 close text-dark" data-dismiss="toast" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="toast-body bg-white">
+        <!-- the message template variable included in the message container in the base template -->
+        {{ message }}        
+    </div>
+</div>

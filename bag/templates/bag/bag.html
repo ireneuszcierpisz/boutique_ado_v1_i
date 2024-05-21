@@ -170,6 +170,7 @@
 <!-- JavaScript code to be executed when any of the two <a> elements in the table above are clicked-->
 <!-- !!we need to add the additional views in the bag app to handle these events -->
 <script type="text/javascript">
+
     // Update quantity on click on the update link;
     // find the most recently seen update form in the Dom,  and then call the form's submit method
     $('.update-link').click(function(e) {
@@ -200,7 +201,7 @@
         var data = {'csrfmiddlewaretoken': csrfToken, 'product_size': size};
 
         // to post to the server use the post method from jQuery giving it both the url and the data.
-        // the post function will work here if we will replace the slim version of jQuery with the min version
+        // the post function will work here if we will replace the slim version of jQuery with the min version in base.html block corejs
         $.post(url, data)
          // when done execute a function to reload the page
          .done(function() {

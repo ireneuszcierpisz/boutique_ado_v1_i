@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-*zc!+9#1g(v!%0(l#(#7tp)(60#s_b-ii-skf5$njhk!io#tis
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['8000-ireneuszcie-boutiqueado-0klw69r04ch.ws-eu111.gitpod.io']
+ALLOWED_HOSTS = ['8000-ireneuszcie-boutiqueado-0klw69r04ch.ws-eu114.gitpod.io']
 
 
 # Application definition
@@ -81,6 +81,9 @@ TEMPLATES = [
         },
     },
 ]
+
+# ref to the toast; to store messages in the session due to the use of gitpod
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
 AUTHENTICATION_BACKENDS = (
     # Needed to login by username in Django admin, regardless of `allauth`

@@ -1,5 +1,11 @@
 from django.shortcuts import render, redirect, reverse, HttpResponse
 
+# import messages and keep users informed of everything that's going on across the entire site
+# by sending messages through the Django messages framework
+from django.contrib import messages
+
+from products.models import Product
+
 # define a view which will render the bag template
 def view_bag(request):
     """
@@ -11,6 +17,9 @@ def view_bag(request):
 # We'll submit the form product_detail.html to this view including the product id and the quantity
 def add_to_bag(request, item_id):
     """ Add a quantity of the specified product to the shopping bag """
+
+    # to make messages works we need
+    product = Product.objects.get(pk=item_id)
 
     # get the quantity from the form
     # convert it to an integer since it'll come from the template as a string
@@ -54,6 +63,9 @@ def add_to_bag(request, item_id):
         else:
             # create a key of the items id and set it equal to the quantity
             bag[item_id] = quantity
+            # ref to the toast; add a message to the request object and use string formatting 
+            # to let the user know they've added a product to their bag
+            messages.success(request, f'Added {product.name} to your bag.')
 
     # put the bag variable into the session which itself is a python dictionary
     request.session['bag'] = bag
