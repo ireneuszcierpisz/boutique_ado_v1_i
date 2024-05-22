@@ -67,6 +67,7 @@ def all_products(request):
             #If the query is blank it's not going to return any results 
             if not query:
                 # we use the Django messages framework to attach an error message to the request
+                # this message will show up as the toast_error.html if the user submits a search with no search criteria
                 messages.error(request, "You didn't enter any search criteria")
                 # and redirect back to the products url
                 return redirect(reverse('products'))
