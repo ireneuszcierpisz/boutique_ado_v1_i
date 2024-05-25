@@ -1,3 +1,5 @@
+# Make models and signals connected
+
 """
 We need a way to update the order total, delivery cost, and grand_total for each order as users add line items to it.
    The basic process is that 
