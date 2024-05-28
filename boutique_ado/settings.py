@@ -45,6 +45,9 @@ INSTALLED_APPS = [
     'products',
     'bag',
     'checkout',
+
+    # others
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -58,6 +61,9 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'boutique_ado.urls'
+
+# template pack we want to use
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 TEMPLATES = [
     {
@@ -74,11 +80,20 @@ TEMPLATES = [
                 'django.template.context_processors.request', # required by allauth
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                # adding our context_processor below means that anytime we need to access the bag contents 
-                # in any template across the entire site they'll be available to us
+                # to access the noimage.png file in the media folder if a product doesn't have an image
+                # we need to include the media context processor here:
+                'django.template.context_processors.media',
+                # adding our custom context_processor below means that anytime we need to access the bag contents 
+                # in any template across the entire site they'll be available to us from bag/contexts.py
                 # without having to return them from a whole bunch of different views across different apps
                 'bag.contexts.bag_contents',
             ],
+            # add a list which contain all the tags we want available in all our templates by default
+            # this gives us access to everything we need from crispy forms across all templates by default
+            'builtins': [
+                'crispy_forms.templatetags.crispy_forms_tags',
+                'crispy_forms.templatetags.crispy_forms_field',
+            ]
         },
     },
 ]

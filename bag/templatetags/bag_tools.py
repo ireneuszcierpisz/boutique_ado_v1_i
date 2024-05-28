@@ -4,7 +4,7 @@ For the subtotal column, the subtotal should be the quantity times the product p
 """
 
 # as there is the empty file called __init__.py in templatetags folder
-# so that this directory is treated as a Python package
+# so that templatetags directory is treated as a Python package
 # making bag_tools.py module available for imports and to use in templates
 from django import template
 

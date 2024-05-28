@@ -1,3 +1,5 @@
+# The context processor
+
 # use the decimal function since this is a financial transaction and using float is susceptible to rounding errors.
 # in general using decimal is preferred when working with money because it's more accurate.
 from decimal import Decimal

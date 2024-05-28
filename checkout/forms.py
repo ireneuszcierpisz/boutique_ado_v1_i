@@ -3,10 +3,11 @@
 from django import forms
 from .models import Order
 
-# create a new OrderForm class and give it meta options 
-# to tell django which model it'll be associated with and which fields we want to render.
+# Create an OrderForm class 
+# give OrderForm class Meta class to tell django which model it'll be associated with 
+# and which fields we want to render.
 # ! we're not rendering any fields in the form which will be automatically calculated
-# means it'll all be done via the model methods
+# means all calculations will be done via the model methods
 class OrderForm(forms.ModelForm):
     class Meta:
         model = Order
@@ -22,8 +23,9 @@ class OrderForm(forms.ModelForm):
         """
         # override the init method of the form allow us to customize it
         # call the default init method to set the form up as it would be by default
+        # use the super() method to call the constructor of the parent class and pass in the same arguments
         super().__init__(*args, **kwargs)
-        # created a dictionary of placeholders which will show up in the form fields
+        # create a dictionary of placeholders which will show up in the form fields
         placeholders = {
             'full_name': 'Full Name',
             'email': 'Email Address',
@@ -36,8 +38,8 @@ class OrderForm(forms.ModelForm):
             'county': 'County',
         }
 
-        # setting the autofocus attribute on the full name field to true
-        # so the cursor will start in the full name field when the user loads the page
+        # setting the autofocus attribute on the full name field to True
+        # so the cursor will start in the full_name field when the user loads the page
         self.fields['full_name'].widget.attrs['autofocus'] = True
         # iterate through the forms fields 
         for field in self.fields:
