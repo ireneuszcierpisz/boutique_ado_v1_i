@@ -21,6 +21,9 @@ def checkout(request):
     # create a context containing the order form
     context = {
         'order_form': order_form,
+        # copy the public key from https://dashboard.stripe.com/test/apikeys
+        'stripe_public_key': 'pk_test_51PLiQwKdU2DfvUQTqrtNHDRZCsckN6c3uFqJ47ugaYWliYUNloH3ji6JfBJv6vhaFh5gvYMd4fC51vNzGwkn66K90098t6jPpd',
+        'client_secret': 'test client secret',
     }
 
     return render(request, template, context)
