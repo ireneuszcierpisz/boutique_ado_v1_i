@@ -178,4 +178,6 @@
     {{ client_secret|json_script:"id_client_secret" }}
     <script src="{% static 'checkout/js/stripe_elements.js' %}"></script>
 
+    <!-- ?!! use client_secret to call confirmCardPayment() from stripe js and verify the card -->
+
 {% endblock %}

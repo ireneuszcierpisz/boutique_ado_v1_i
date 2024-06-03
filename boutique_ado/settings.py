@@ -181,5 +181,16 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+# Stripe
 FREE_DELIVERY_THRESHOLD = 50
 STANDARD_DELIVERY_PERCENTAGE = 10
+STRIPE_CURRENCY = 'usd'
+"""Gitpod Environment Variables are used to store information like passwords.
+We get these KEYs below from the environment and give it an empty default value because 
+even though the public key is in our github from the commit we don't want the secret key in there 
+as the secret key can be used to do everything on stripe including creating charges,
+making payments, issuing refunds, and even updating our own account information.
+So it's really important to keep the secret key safe and out of version control.
+The public key is meant to be public so that doesn't really matter but is added here for consistency"""
+STRIPE_PUBLIC_KEY = os.getenv('STRIPE_PUBLIC_KEY', '')
+STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY', '')
