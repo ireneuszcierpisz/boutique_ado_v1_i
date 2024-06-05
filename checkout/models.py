@@ -42,7 +42,12 @@ class Order(models.Model):
         """
         # the aggregate function uses the sum function across all the lineitem_total fields for all line items on this order.
         # add a new field to the query set called lineitem_total_sum which we can then get and set the order_total to that
-        self.order_total = self.lineitems.aggregate(Sum('lineitem_total'))['lineitem_total__sum']
+        self.order_total = self.lineitems.aggregate(Sum('lineitem_total'))['lineitem_total__sum'] or 0
+        """
+        by adding or zero to the end of line above that aggregates all the line item totals will prevent an error, 
+        if we manually delete all the lineitems from an order, by making sure that this sets the order_total to zero instead of None.
+        Without this, the next line would cause an error because it would try to determine if None is less than or equal to the delivery threshold.
+        """
         if self.order_total < settings.FREE_DELIVERY_THRESHOLD:
             self.delivery_cost = self.order_total * settings.STANDARD_DELIVERY_PERCENTAGE / 100
         else:
