@@ -1,4 +1,5 @@
 # Make models and signals connected
+# The signals django sends each time a model is saved or deleted
 
 """
 We need a way to update the order total, delivery cost, and grand_total for each order as users add line items to it.
