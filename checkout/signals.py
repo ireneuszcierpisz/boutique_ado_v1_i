@@ -12,11 +12,12 @@ We've got the method to update the total in the Order model.
 signals.py has to live at the same level as models.py
 
 To let django know that there's a new signals module with some listeners in it 
-we just need to make a change to apps.py too.
+we just need to make a change to the checkout/apps.py too.
 """
 
 # import two signals post_save  and  post_delete  where post, in this case, means AFTER
-# this implies these signals are sent by django to the entire application after a model instance is saved and after it's deleted respectively
+# this implies these signals are sent by django to the entire application 
+# after a model instance is saved and after it's deleted respectively
 from django.db.models.signals import post_save, post_delete
 
 # To receive signals import receiver from django.dispatch
@@ -29,7 +30,7 @@ from .models import OrderLineItem
 # use the receiver decorator telling it we're receiving post saved signals from the OrderLineItem model
 @receiver(post_save, sender=OrderLineItem)
 # a special type of function which handle signals from the   post_save   event.
-# it's parameters refer to:
+# parameters refer to:
 #  the    sender    of the signal, in our case OrderLineItem 
 #  the actual    instance    of the model that sent it
 #  a boolean,   created   , sent by django referring to whether this is a new instance or one being updated
@@ -48,6 +49,6 @@ def update_on_delete(sender, instance, **kwargs):
     """
     Update order total on lineitem delete
     """
-    print('Delete signal receive!')
+    # print('!!! Delete signal receive!')
     
     instance.order.update_total()
