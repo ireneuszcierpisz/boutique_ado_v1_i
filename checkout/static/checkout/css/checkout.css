@@ -37,3 +37,25 @@
     color: #000;
     border: 1px solid #000;
 }
+
+/* loading overlay in checkout.html */
+#loading-overlay {
+	display: none;
+	position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(23, 162, 184, .85);
+    z-index: 9999;
+    /* The z-index of 9999 to make sure loading-overlay stays on top of everything on the page, 
+    except a pop-up from stripe which need to be on top of the overlay for the user to complete their payment */
+}
+
+.loading-spinner {
+	display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    height: 100%;
+}

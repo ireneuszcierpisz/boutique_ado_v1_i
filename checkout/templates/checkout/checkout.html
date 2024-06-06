@@ -164,6 +164,17 @@
             </div>
         </div>
     </div>
+    <!-- create a loading-overlay div with a giant spinner icon in the center of the screen
+    and a transparent blue overlay to cover up the page and indicate that the payment is being processed.
+    CSS for this in checkout.css -->
+    <!-- this element is trigged by js from stripe_elements.js -->
+    <div id="loading-overlay">
+        <h1 class="text-light logo-font loading-spinner">
+            <span class="icon">
+                <i class="fas fa-3x fa-sync-alt fa-spin"></i>
+            </span>
+        </h1>
+    </div>
 {% endblock %}
 
 <!-- open up a postloadjs block -->
