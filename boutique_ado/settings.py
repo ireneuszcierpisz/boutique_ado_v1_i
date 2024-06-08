@@ -194,3 +194,4 @@ So it's really important to keep the secret key safe and out of version control.
 The public key is meant to be public so that doesn't really matter but is added here for consistency"""
 STRIPE_PUBLIC_KEY = os.getenv('STRIPE_PUBLIC_KEY', '')
 STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY', '')
+STRIPE_WH_SECRET = os.getenv('STRIPE_WH_SECRET', '')
