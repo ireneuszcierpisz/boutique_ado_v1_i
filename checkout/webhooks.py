@@ -68,3 +68,11 @@ def webhook(request):
 
     # return the response to stripe
     return response
+
+
+"""
+        We don't have a way to determine in the webhook whether the user had the save info box checked.
+        We can add that to the payment intent in a key called metadata, but 
+        we have to do it from the server-side because the confirmCardPayment method in stripe_elements.js doesn't support adding it.
+        We write cache_checkout_data view in checkout/views.py to take care of it.
+"""

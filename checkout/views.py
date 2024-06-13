@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect, reverse, get_object_or_404
+from django.shortcuts import render, redirect, reverse, get_object_or_404, HttpResponse
+from django.views.decorators.http import require_POST
 from django.contrib import messages
 from django.conf import settings
 
@@ -10,6 +11,7 @@ from products.models import Product
 from bag.contexts import bag_contents
 
 import stripe
+import json
 
 """ Stripe works with what are called payment intents.
 The process: when a user hits the checkout page
@@ -17,6 +19,39 @@ the checkout view will call out to stripe and create a payment intent
 for the current amount of the shopping bag.
 When stripe creates the intent it'll also have a secret that identifies it 
 and this secret will be returned to us and we'll send it to the template as the client secret variable. """
+
+"""
+        to determine whether the user had the save info box checked 
+        we can do it from the server-side by adding that to the payment intent in a key called metadata,
+        in our cache_checkout_data view
+"""
+# we expect only the post method here as we want to post to this view from JavaScript
+# and if everything goes ok we should get a 200 response.
+@require_POST
+# before we call the confirmCardPayment method in the stripe_elements.js we make a post request to this view 
+# and give it the client secret from the payment intent.
+def cache_checkout_data(request):
+    try:
+        # store payment intent id as pid variable
+        pid = request.POST.get('client_secret').split('_secret')[0]
+        # set up stripe with the secret key
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+        # then we can modify the payment intent calling stripe.PaymentIntent.modify,
+        # give it the pid, and tell it what we want to modify in this case add metadata
+        stripe.PaymentIntent.modify(pid, metadata={
+            # add the bag to the metadata by adding a JSON dump of user shopping bag
+            'bag': json.dumps(request.session.get('bag', {})),
+            # add the user who's placing the order whether or not they wanted to save their information
+            'save_info': request.POST.get('save_info'),
+            'username': request.user,
+        })
+        return HttpResponse(status=200)
+    except Exception as e:
+        messages.error(request, 'Sorry, your payment cannot be \
+            processed right now. Please try again later.')
+        return HttpResponse(content=e, status=400)
+# to access this view create a URL in urls.py and create variables in stripe_elements.js
+
 
 def checkout(request):
     # create the payment intent
@@ -122,7 +157,7 @@ def checkout(request):
         )
 
         # print to the terminal the payment intent which is back from stripe like a dictionary with many keys
-        print(intent)
+        # print(intent)
 
         # create an empty instance of OrderForm class
         order_form = OrderForm()
