@@ -135,6 +135,11 @@
 
                         <!-- card-errors element used to display form errors -->
                         <div class="mb-3 text-danger" id="card-errors" role="alert"></div>
+                        <!-- to update the view to add Order model's original_bag and stripe_pid fields 
+                         when the form is submitted we first add a hidden input to the form containing the client secret -->
+                        <!-- Pass the client secret to the view so we can get the payment intent id -->
+                        <input type="hidden" value="{{ client_secret }}" name="client_secret">
+                    </fieldset>
                     </fieldset>
 
                     <div class="submit-button text-right mt-5 mb-2">                    

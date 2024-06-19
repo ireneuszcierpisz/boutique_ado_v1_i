@@ -7,7 +7,16 @@ from django.conf import settings
 
 from products.models import Product
 
-# models needed to create and track orders for anyone who makes a purchase
+# Here are the models we need to create and track orders for anyone who makes a purchase
+
+"""
+As it's possible for the same customer to purchase the same things twice on separate occasions
+which would result in us finding the first order in the database when they place the second one 
+and thus the second-order never being added.
+We can combat this by adding two new fields to the Order model.
+The first is a TextField original_bag that will contain the original shopping bag that created it.
+And the second is a CharField stripe_pid that contain the stripe payment intent id which is guaranteed to be unique.
+"""
 
 # the Order model will handle all orders across the store and is related to the OrderLineItem model
 class Order(models.Model):
@@ -26,6 +35,8 @@ class Order(models.Model):
     delivery_cost = models.DecimalField(max_digits=6, decimal_places=2, null=False, default=0)
     order_total = models.DecimalField(max_digits=10, decimal_places=2, null=False, default=0)
     grand_total = models.DecimalField(max_digits=10, decimal_places=2, null=False, default=0)
+    original_bag = models.TextField(null=False, blank=False, default='')
+    stripe_pid = models.CharField(max_length=254, null=False, blank=False, default='')
 
     # the first underscore by convention indicates it's a private method which will only be used inside this class
     def _generate_order_number(self):
